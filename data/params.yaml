@@ -3,7 +3,7 @@
 ################################
 training_mode: DAFA-Net    # [CDG, DAFA-Net]
 
-output_directory: output/test
+output_directory: output
 
 #dataset_dir: datasets/WoodScape/
 #train_file: data/train.txt

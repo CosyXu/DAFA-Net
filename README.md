@@ -24,9 +24,10 @@ pip install future tensorboard
 #### 2. Prepare datasets
 
 ```shell
-git clone https://github.com/xjixzz/MISM.git
+git clone -b dev https://github.com/CosyXu/DAFA-Net.git
 cd DAFA-Net
 mkdir datasets
+mkdir outputs
 ```
 
 Follow the instructions on [OmniDet](https://github.com/valeoai/WoodScape/blob/master/README.md) to prepare the WoodScape dataset and place it in the `datasets` directory.
@@ -111,6 +112,8 @@ SynWoodScape
 [CAM] : FV, RV, MVL, MVR
 
 #### 3. Get pre-trained models
+
+You can download the pretrained CDG and DAFA-Net from [here](https://drive.google.com/drive/folders/1F8p9jKlfrTrPCcOMx7JA0NlTcCXM5Kc6?usp=sharing).
 
 | Model Name | Abs Rel. | Sq Rel. | RMSE  | RMSElog | A1    | A2    | A3    |
 | ---------- | -------- | ------- | ----- | ------- | ----- | ----- | ----- |
