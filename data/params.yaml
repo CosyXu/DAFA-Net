@@ -1,7 +1,7 @@
 ################################
 # -- TRAINing --
 ################################
-training_mode: DAFA-Net    # [CDG, DAFA-Net]
+training_mode: DAFA-Net        # [CDG, DAFA-Net]
 
 output_directory: output
 
