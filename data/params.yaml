@@ -1,0 +1,104 @@
+################################
+# -- TRAINing --
+################################
+training_mode: DAFA-Net    # [CDG, DAFA-Net]
+
+output_directory: output/test
+
+#dataset_dir: datasets/WoodScape/
+#train_file: data/train.txt
+#val_file: data/val.txt
+#test_file: data/test.txt
+
+dataset_dir: datasets/SynWoodScape/
+train_file: data/train_syn.txt
+val_file: data/test_syn.txt
+test_file: data/test_syn.txt
+
+################################
+# -- MODEL CONFIGS --
+################################
+model_name: DAFA-Net            # Writers will be written based on the model name
+dataset: synwoodscape_raw       # [woodscape_raw, synwoodscape_raw] which should be corresponding to dataset_dir
+height: 288                     # network input height
+width: 544                      # network input width
+
+network_layers: 18              # Number of layers in resnet encoder arch [18, 50]
+pose_network_layers: 18         # Number of layers for posenet encoder in resnet arch [18, 50]
+frame_ids: [0, -1]              # frames to load in temporal order [t, t-1]
+
+rotation_mode: euler            # [euler, quat] euler (yaw,pitch,roll) or quat (last 3 coefficients)
+num_scales: 4                   # Number of scales for the input dyadic pyramid image
+crop: True                      # if set, crop the car hood appropriately for all the datasets
+
+use_velocity: True              # if set, use velocity as a supervisory signal
+encoder_model_type: orgSwin     # type of encoder [Res, orgSwin]
+swin_model_type: orgSwin-T-s2   # type of swin transformer as encoder [orgSwin-T, orgSwin-T-repPad-s2, orgSwin-T-s2]
+metric_name: depth_synwoodscape # types of metrics
+
+#############################################
+# -- DAFA-NET --
+#############################################
+depth_binning: inverse          # defines how the depth bins are constructed for the cost volume.
+                                # 'linear' is uniformly sampled in depth space, 'inverse' is uniformly sampled in inverse depth space
+num_depth_bins: 32              # Number of hypothesized depth candidates
+disparity_smoothness: 0.001     # disparity smoothness weight
+scales: [0, 1, 2, 3]            # scales used in the loss
+min_depth: 0.1
+max_depth: 100.0
+freeze_teacher_and_pose: False  # If set, freeze the weights of the single frame teacher network and pose network
+freeze_teacher_epoch: 15        # Sets the epoch number at which to freeze the teacher network and the pose network
+freeze_teacher_step: -1         # Sets the step number at which to freeze the teacher network and the pose network
+                                # By default is -1 and so will not be used.
+
+disable_automasking: False      # if set, doesn't do auto-masking
+no_ssim: False                  # if set, disables ssim in the loss
+weights_init: pretrained        # [pretrained, scratch]
+use_future_frame: False         # If set, will also use a future frame in time for matching.
+num_matching_frames: 1          # Sets how many previous frames to load to build the cost volume
+disable_motion_masking: False   # If set, will not apply consistency loss in regions where the cost volume is deemed untrustworthy
+no_matching_augmentation: False # If set, will not apply static camera augmentation or zero cost volume augmentation during training
+
+iters: 4                        # iterations used in IFAM
+
+depth_bin_fac: 1.0              # initial value of the learnable scale map
+delta_fac: 1.2                  # the first weight of ADSDE
+delta_fac_d: 0.4                # the second weight of ADSDE
+
+cost_volume_mode: l1            # [l1, dot, ssim, ssim_l1]
+
+reconstr_weight: 0.15           # L1 loss weight
+ssim_weight: 0.85               # Photometric loss weight
+
+#############################
+# -- TRAINING OPTIONS --
+#############################
+batch_size: 6                   # training size of the model
+num_workers: 8                  # Data loader workers
+epochs: 20                       # number of epochs
+scheduler_step_size: 15         # step size of the scheduler
+learning_rate: 0.0001           # learning rate of the model
+
+#############################
+# -- LOGGING OPTIONS --
+#############################
+log_frequency: 300              # number of batches between each tensorboard log
+val_frequency: 300              # step frequency at which validation takes place
+save_frequency: 20              # number of epochs between each save
+
+###########################
+# -- PRE_TRAINED CONFIG --
+###########################
+# Pre-trained weights folder path of trained models to resume training and for testing
+pretrained_weights: pre_trained/CDG-swin
+
+load_weights_folder: output/best     # path of models for evaluation
+
+models_to_load: [coarse_encoder, coarse_depth, pose_encoder, pose]
+
+#############################
+# -- CUDA --
+#############################
+device: 'cuda:0'                     # choose cpu or cuda:0 device
+cuda_visible_devices: "0"            # To forcefully run the model on CPU set -1 else set string value to 0
+########################################################################################################################
