@@ -137,7 +137,7 @@ python main.py
 
 #### 6. Evaluate the DAFA-Net
 
-Set the path to the trained DAFA-Net weights in the `load_weights_folder` field in `data/params.yaml` to start the evaluation:
+Set the path to the trained DAFA-Net weights in the `load_weights_folder` field and set the `batch_size` to 1 in `data/params.yaml` to start the evaluation:
 ```shell
 python test_model.py
 ```
